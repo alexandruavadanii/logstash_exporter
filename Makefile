@@ -34,12 +34,14 @@ clean:
 
 $(GOPATH)/bin/promu promu:
 	@GOOS=$(shell uname -s | tr A-Z a-z) \
-		GOARCH=$(subst x86_64,amd64,$(patsubst i%86,386,$(shell uname -m))) \
+		GOARCH=$(subst aarch64,arm64,$(subst x86_64,amd64,$(patsubst i%86,386,$(shell uname -m)))) \
 		$(GO) get -u github.com/prometheus/promu
 
 $(GOPATH)/bin/gometalinter lint:
 	@GOOS=$(shell uname -s | tr A-Z a-z) \
-		GOARCH=$(subst x86_64,amd64,$(patsubst i%86,386,$(shell uname -m))) \
+		GOARCH=$(subst aarch64,arm64,$(subst x86_64,amd64,$(patsubst i%86,386,$(shell uname -m)))) \
 		$(GO) get -u github.com/alecthomas/gometalinter
+	@cd $(GOPATH)/src/github.com/alecthomas/gometalinter && \
+		git checkout v2.0.12
 
 .PHONY: all format vet build test promu clean $(GOPATH)/bin/promu $(GOPATH)/bin/gometalinter lint
